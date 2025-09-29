@@ -1,0 +1,14 @@
+name: "XAU/USD Statistical Arbitrage Strategy"
+strategy_type: "statistical_arbitrage"
+parameters:
+  lookback_period: 100  # Statistical lookback period
+  z_score_threshold: 2.0  # Z-score threshold for entry
+  mean_reversion_threshold: 1.5  # Mean reversion threshold
+  position_size: 0.1  # Position size
+  stop_loss: 8.0  # Stop loss in USD
+  take_profit: 6.0  # Take profit in USD
+  min_volume: 0.1  # Minimum volume
+  max_trades_per_hour: 15  # Low frequency
+  volatility_window: 50  # Volatility calculation window
+  correlation_threshold: 0.7  # Price correlation threshold
+  rebalance_frequency: 100  # Rebalance every N ticks

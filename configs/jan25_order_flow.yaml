@@ -1,0 +1,14 @@
+name: "XAU/USD Order Flow Detection Strategy"
+strategy_type: "order_flow"
+parameters:
+  detection_window: 100  # Ticks to analyze for order flow
+  volume_threshold: 10  # Minimum volume threshold
+  price_movement_threshold: 0.5  # Minimum price movement to trigger
+  momentum_period: 20  # Period for momentum calculation
+  confidence_threshold: 0.7  # Minimum confidence to trade
+  position_size: 0.08  # Position size per trade
+  stop_loss: 1.5  # Stop loss in USD
+  take_profit: 2.0  # Take profit in USD
+  max_trades_per_hour: 25  # Rate limiting
+  cooldown_period: 30000  # Milliseconds between trades
+  trend_strength_min: 0.3  # Minimum trend strength

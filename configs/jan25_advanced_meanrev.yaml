@@ -1,0 +1,15 @@
+name: "Advanced XAU/USD Mean Reversion Strategy"
+strategy_type: "advanced_mean_reversion"
+parameters:
+  ma_period: 30  # Moving average period
+  threshold: 2.0  # Deviation threshold (USD)
+  position_size: 0.15  # Position size
+  stop_loss: 4.0  # Stop loss in USD
+  take_profit: 3.0  # Take profit in USD
+  min_volume: 0.1  # Minimum volume
+  max_trades_per_hour: 15  # Lower frequency
+  lookback_period: 100  # Price history lookback
+  volatility_filter: true  # Enable volatility filtering
+  rsi_period: 14  # RSI period for overbought/oversold
+  rsi_oversold: 30  # RSI oversold threshold
+  rsi_overbought: 70  # RSI overbought threshold

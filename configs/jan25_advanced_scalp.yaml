@@ -1,0 +1,13 @@
+name: "Advanced XAU/USD Scalping Strategy"
+strategy_type: "advanced_scalping"
+parameters:
+  min_spread: 0.8  # Minimum spread threshold (USD)
+  max_spread: 2.0  # Maximum spread to avoid
+  position_size: 0.1  # Position size
+  stop_loss: 1.0  # Stop loss in USD
+  take_profit: 0.8  # Take profit in USD
+  min_volume: 0.1  # Minimum volume
+  max_trades_per_hour: 20  # Rate limiting
+  volatility_threshold: 0.05  # Minimum volatility to trade
+  momentum_period: 10  # Period for momentum calculation
+  spread_ma_period: 20  # Moving average period for spread

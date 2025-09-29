@@ -1,0 +1,16 @@
+/.vscode
+/node_modules
+/dist
+/build
+/coverage
+/logs
+/temp
+/uploads
+/public
+/src
+/docs
+/.venv
+.venv
+.env
+runs/
+target/

@@ -1,0 +1,15 @@
+name: "XAU/USD Pairs Trading Strategy"
+strategy_type: "pairs_trading"
+parameters:
+  lookback_period: 200  # Longer lookback for better statistics
+  z_score_entry: 1.5  # Lower entry threshold for more trades
+  z_score_exit: 0.5  # Exit when z-score normalizes
+  cointegration_test: true  # Test for cointegration
+  hedge_ratio_update: 50  # Update hedge ratio every N ticks
+  position_size: 0.06  # Moderate position size
+  max_holding_time: 300000  # Maximum holding time (5 minutes)
+  stop_loss: 3.0  # Stop loss based on z-score deviation
+  transaction_cost_adjustment: 0.1  # Adjust for spread costs
+  confidence_interval: 0.95  # Statistical confidence level
+  min_sample_size: 100  # Minimum sample size for statistics
+  rebalance_frequency: 1000  # Rebalance every N ticks

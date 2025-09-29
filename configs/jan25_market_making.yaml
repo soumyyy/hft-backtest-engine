@@ -1,0 +1,13 @@
+name: "XAU/USD Market Making Strategy"
+strategy_type: "market_making"
+parameters:
+  spread_width: 0.5  # Base spread width in USD
+  inventory_limit: 5  # Maximum inventory position
+  rebalance_threshold: 2  # Rebalance when inventory exceeds this
+  volatility_adjustment: true  # Adjust spreads based on volatility
+  order_size: 0.05  # Base order size
+  max_orders_per_side: 3  # Maximum orders per side
+  spread_adjustment_factor: 0.1  # How much to adjust spreads
+  inventory_decay: 0.95  # How quickly inventory decays
+  min_spread: 0.2  # Minimum spread
+  max_spread: 2.0  # Maximum spread

@@ -1,0 +1,12 @@
+name: "XAU/USD Range Trading Strategy"
+strategy_type: "range_trading"
+parameters:
+  lookback_period: 50  # Shorter lookback for range detection
+  range_threshold: 0.5  # Minimum range size (USD)
+  position_size: 0.02  # Smaller position size
+  stop_loss: 1.0  # Stop loss in USD
+  take_profit: 0.8  # Take profit in USD
+  min_volume: 0.1  # Minimum volume
+  max_trades_per_hour: 30  # Rate limiting
+  breakout_threshold: 0.2  # How far from range boundary to trigger
+  range_stability_period: 20  # Period to check range stability

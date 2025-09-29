@@ -1,0 +1,11 @@
+name: "XAU/USD Mean Reversion Strategy"
+strategy_type: "mean_reversion"
+parameters:
+  ma_period: 20  # Moving average period
+  threshold: 0.001  # Deviation threshold from mean
+  max_position_size: 2.0  # Maximum position size
+  stop_loss: 0.002  # Stop loss in price units
+  take_profit: 0.0015  # Take profit in price units
+  min_volume: 0.1  # Minimum volume for trade execution
+  max_trades_per_hour: 50  # Rate limiting
+  lookback_period: 100  # Price history lookback
