@@ -1,6 +1,0 @@
-name: "Simple XAU/USD Strategy"
-strategy_type: "simple"
-parameters:
-  spread_threshold: 0.5  # Spread threshold for trading
-  position_size: 0.1  # Position size
-  max_trades_per_hour: 10  # Very conservative rate limiting

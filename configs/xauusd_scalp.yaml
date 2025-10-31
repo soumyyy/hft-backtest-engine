@@ -1,0 +1,8 @@
+name: "XAU/USD Tick Scalping"
+strategy_type: "scalping"
+parameters:
+  min_spread: 0.8          # Only touch the market when spread is <= 0.8
+  max_trades_per_hour: 90  # Trade cap to avoid flooding
+  take_profit: 0.35        # Target 35 cents per contract
+  stop_loss: 0.45          # Cut losers quickly
+  max_hold_ms: 60000       # Hold at most 60 seconds

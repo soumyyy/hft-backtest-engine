@@ -1,9 +1,0 @@
-name: "XAU/USD Scalping Strategy"
-strategy_type: "scalping"
-parameters:
-  min_spread: 2.0  # Minimum spread threshold for trading (USD)
-  max_position_size: 1.0  # Maximum position size
-  stop_loss: 0.0005  # Stop loss in price units
-  take_profit: 0.0002  # Take profit in price units
-  min_volume: 0.1  # Minimum volume for trade execution
-  max_trades_per_hour: 100  # Rate limiting

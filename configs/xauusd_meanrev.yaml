@@ -1,0 +1,9 @@
+name: "XAU/USD Daily Mean Reversion"
+strategy_type: "mean_reversion"
+parameters:
+  ma_period: 120              # 120 ticks ≈ 8 hours on 15-second sampling
+  threshold_std: 1.2          # Enter when price is 1.2σ away from mean
+  max_trades_per_hour: 20     # Slow down to avoid churn
+  take_profit: 2.5            # Close longs when bid - entry >= 2.5
+  stop_loss: 3.5              # Exit if loss exceeds 3.5
+  max_hold_ms: 900000         # Force exit after 15 minutes

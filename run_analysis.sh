@@ -14,6 +14,9 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
+declare -a CONFIG_FILES=()
+declare -a STRATEGY_NAMES=()
+
 # Function to print colored output
 print_header() {
     echo -e "${BLUE}================================================${NC}"
@@ -87,6 +90,22 @@ display_results() {
     echo ""
 }
 
+load_strategies() {
+    CONFIG_FILES=()
+    STRATEGY_NAMES=()
+
+    if compgen -G "configs/*.yaml" > /dev/null; then
+        while IFS= read -r config_file; do
+            name=$(grep -m1 "^name:" "$config_file" | cut -d':' -f2- | sed 's/^ *//; s/^"//; s/"$//')
+            if [ -z "$name" ]; then
+                name=$(basename "$config_file")
+            fi
+            CONFIG_FILES+=("$config_file")
+            STRATEGY_NAMES+=("$name")
+        done < <(ls configs/*.yaml 2>/dev/null | sort)
+    fi
+}
+
 # Function to show file sizes and processing info
 show_processing_info() {
     print_header "📈 Processing Information"
@@ -104,12 +123,13 @@ show_processing_info() {
     
     echo ""
     echo -e "${CYAN}Available Strategies:${NC}"
-    for config in configs/*.yaml; do
-        if [ -f "$config" ]; then
-            strategy_name=$(grep "name:" "$config" | sed 's/name: //' | tr -d '"')
-            echo "  ⚙️  $(basename "$config"): $strategy_name"
-        fi
-    done
+    if [ "${#CONFIG_FILES[@]}" -eq 0 ]; then
+        print_warning "No strategy configurations found in configs/ directory!"
+    else
+        for idx in "${!CONFIG_FILES[@]}"; do
+            echo "  ⚙️  $(basename "${CONFIG_FILES[idx]}"): ${STRATEGY_NAMES[idx]}"
+        done
+    fi
     
     echo ""
 }
@@ -195,110 +215,57 @@ main() {
     echo -e "${YELLOW}This script will run backtesting, analyze results, and display comprehensive reports.${NC}"
     echo ""
     
-    # Show processing info
-    show_processing_info
-    
-    # Check if we have strategies to run
-    if [ ! -d "configs" ] || [ -z "$(ls -A configs/*.yaml 2>/dev/null)" ]; then
+    load_strategies
+
+    if [ "${#CONFIG_FILES[@]}" -eq 0 ]; then
         print_error "No strategy configurations found in configs/ directory!"
         exit 1
     fi
+
+    # Show processing info
+    show_processing_info
     
     # Ask user what to do
     echo -e "${CYAN}Available Trading Strategies:${NC}"
-    echo "1) 🔪 Basic Scalping Strategy"
-    echo "2) 📈 Basic Mean Reversion Strategy"
-    echo "3) ⚡ Simple Strategy (High Frequency)"
-    echo "4) 🎯 Advanced Scalping Strategy"
-    echo "5) 📊 Advanced Mean Reversion Strategy"
-    echo "6) 📈 Momentum Strategy"
-    echo "7) 🔬 Statistical Arbitrage Strategy"
-    echo "8) 🏪 Market Making Strategy"
-    echo "9) 🔍 Order Flow Detection"
-    echo "10) 💰 Profitable Momentum Strategy"
-    echo "11) 📊 Pairs Trading Strategy"
-    echo "12) 🎯 Range Trading Strategy"
-    echo "13) 🔄 Run All Strategies"
-    echo "14) 📋 Show All Previous Results"
-    echo "15) 🚪 Exit"
-    echo ""
-    read -p "Enter your choice (1-15): " choice
+    for idx in "${!STRATEGY_NAMES[@]}"; do
+        printf "%d) %s\n" "$((idx + 1))" "${STRATEGY_NAMES[idx]}"
+    done
 
-    case $choice in
-        1)
-            run_strategy "configs/jan25_scalp.yaml" "Basic Scalping Strategy"
-            ;;
-        2)
-            run_strategy "configs/jan25_meanrev.yaml" "Basic Mean Reversion Strategy"
-            ;;
-        3)
-            run_strategy "configs/jan25_simple.yaml" "Simple High-Frequency Strategy"
-            ;;
-        4)
-            run_strategy "configs/jan25_advanced_scalp.yaml" "Advanced Scalping Strategy"
-            ;;
-        5)
-            run_strategy "configs/jan25_advanced_meanrev.yaml" "Advanced Mean Reversion Strategy"
-            ;;
-        6)
-            run_strategy "configs/jan25_momentum.yaml" "Momentum Strategy"
-            ;;
-        7)
-            run_strategy "configs/jan25_arbitrage.yaml" "Statistical Arbitrage Strategy"
-            ;;
-        8)
-            run_strategy "configs/jan25_market_making.yaml" "Market Making Strategy"
-            ;;
-        9)
-            run_strategy "configs/jan25_order_flow.yaml" "Order Flow Detection"
-            ;;
-        10)
-            run_strategy "configs/jan25_profitable_momentum.yaml" "Profitable Momentum Strategy"
-            ;;
-        11)
-            run_strategy "configs/jan25_pairs_trading.yaml" "Pairs Trading Strategy"
-            ;;
-        12)
-            run_strategy "configs/jan25_range_trading.yaml" "Range Trading Strategy"
-            ;;
-        13)
-            print_header "🔄 Running All Strategies"
-            run_strategy "configs/jan25_scalp.yaml" "Basic Scalping Strategy"
+    run_all_choice=$(( ${#STRATEGY_NAMES[@]} + 1 ))
+    show_results_choice=$(( run_all_choice + 1 ))
+    exit_choice=$(( show_results_choice + 1 ))
+
+    echo "${run_all_choice}) 🔄 Run All Strategies"
+    echo "${show_results_choice}) 📋 Show All Previous Results"
+    echo "${exit_choice}) 🚪 Exit"
+    echo ""
+    read -p "Enter your choice (1-${exit_choice}): " choice
+
+    if ! [[ "$choice" =~ ^[0-9]+$ ]]; then
+        print_error "Invalid choice. Please run the script again."
+        exit 1
+    fi
+
+    choice_num=$choice
+
+    if (( choice_num >= 1 && choice_num <= ${#STRATEGY_NAMES[@]} )); then
+        idx=$((choice_num - 1))
+        run_strategy "${CONFIG_FILES[idx]}" "${STRATEGY_NAMES[idx]}"
+    elif (( choice_num == run_all_choice )); then
+        print_header "🔄 Running All Strategies"
+        for idx in "${!CONFIG_FILES[@]}"; do
+            run_strategy "${CONFIG_FILES[idx]}" "${STRATEGY_NAMES[idx]}"
             echo ""
-            run_strategy "configs/jan25_meanrev.yaml" "Basic Mean Reversion Strategy"
-            echo ""
-            run_strategy "configs/jan25_simple.yaml" "Simple High-Frequency Strategy"
-            echo ""
-            run_strategy "configs/jan25_advanced_scalp.yaml" "Advanced Scalping Strategy"
-            echo ""
-            run_strategy "configs/jan25_advanced_meanrev.yaml" "Advanced Mean Reversion Strategy"
-            echo ""
-            run_strategy "configs/jan25_momentum.yaml" "Momentum Strategy"
-            echo ""
-            run_strategy "configs/jan25_arbitrage.yaml" "Statistical Arbitrage Strategy"
-            echo ""
-            run_strategy "configs/jan25_market_making.yaml" "Market Making Strategy"
-            echo ""
-            run_strategy "configs/jan25_order_flow.yaml" "Order Flow Detection"
-            echo ""
-            run_strategy "configs/jan25_profitable_momentum.yaml" "Profitable Momentum Strategy"
-            echo ""
-            run_strategy "configs/jan25_pairs_trading.yaml" "Pairs Trading Strategy"
-            echo ""
-            run_strategy "configs/jan25_range_trading.yaml" "Range Trading Strategy"
-            ;;
-        14)
-            show_all_results
-            ;;
-        15)
-            print_info "Goodbye! 👋"
-            exit 0
-            ;;
-        *)
-            print_error "Invalid choice. Please run the script again."
-            exit 1
-            ;;
-    esac
+        done
+    elif (( choice_num == show_results_choice )); then
+        show_all_results
+    elif (( choice_num == exit_choice )); then
+        print_info "Goodbye! 👋"
+        exit 0
+    else
+        print_error "Invalid choice. Please run the script again."
+        exit 1
+    fi
     
     print_header "🎉 Analysis Complete!"
     print_info "All results are saved in the runs/ directory."
